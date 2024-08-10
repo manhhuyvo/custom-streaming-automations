@@ -1,0 +1,6 @@
+{
+    "require": {
+        "league/csv": "^9.7.0",
+        "illuminate/support": "^8.11"
+    }
+}
