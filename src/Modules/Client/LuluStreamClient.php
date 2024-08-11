@@ -24,6 +24,54 @@ class LuluStreamClient
         }
     }
 
+    /**
+     * UPLOAD REQUESTS
+     */
+    public function uploadServer()
+    {
+        return $this->get('upload/server');
+    }
+
+    /**
+     * FOLDER REQUESTS
+     */
+
+    public function folderList(array $options = [])
+    {
+        return $this->get('folder/list', $options);
+    }
+
+    public function folderCreate(array $options = [])
+    {
+        return $this->get('folder/create', $options);
+    }
+
+    public function folderEdit(array $options = [])
+    {
+        return $this->get('folder/edit', $options);
+    }
+
+    /**
+     * ACCOUNT REQUESTS
+     */
+    public function accountInformation()
+    {
+        return  $this->get('account/info');
+    }
+
+    public function accountStats()
+    {
+        return $this->get('account/stats');
+    }
+
+    /**
+     * FILE REQUESTS
+     */
+    public function fileList(array $options = [])
+    {
+        return $this->get('file/list', $options);
+    }
+
     private function getClient(string $baseUri, array $options = []): Client
     {
         if (! empty($options)) {
@@ -38,16 +86,6 @@ class LuluStreamClient
         ]);
 
         return new Client($configs);
-    }
-
-    public function accountInformation()
-    {
-        return  $this->get('account/info');
-    }
-
-    public function accountStats()
-    {
-        return $this->get('account/stats');
     }
 
     private function get(string $endpoint, array $data = [])

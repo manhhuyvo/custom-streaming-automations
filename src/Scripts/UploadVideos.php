@@ -29,9 +29,7 @@ class UploadVideos extends BaseScript
 
         $this->success("Found total " . count($total) . 'videos for processing...');
 
-        $luluStream = new LuluStreamModule();
 
-        dd($luluStream->getAccountInformation());
 
         $this->setIteration(count($total));
         foreach ($total as $video) {
