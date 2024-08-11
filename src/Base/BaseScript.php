@@ -1,7 +1,7 @@
 <?php
 
 namespace StreamingAutomations\Base;
-require 'src/custom-autoload.php';
+require './custom-autoload.php';
 
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -26,7 +26,7 @@ class BaseScript
                 return Str::startsWith($arg, '--');
             })
             ->toArray();
-            
+
         $this->setIsDry(in_array(self::DRY_MODE, $validArguments));
     }
 
@@ -63,6 +63,11 @@ class BaseScript
 
                 return;
         }
+    }
+
+    public function line(): void
+    {
+        $this->output("\n");
     }
 
     public function success(string $value = ''): void
