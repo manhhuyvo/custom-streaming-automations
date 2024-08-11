@@ -4,6 +4,7 @@ namespace StreamingAutomations\Base;
 require 'src/custom-autoload.php';
 
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class BaseScript
 {
@@ -25,7 +26,7 @@ class BaseScript
                 return Str::startsWith($arg, '--');
             })
             ->toArray();
-
+            
         $this->setIsDry(in_array(self::DRY_MODE, $validArguments));
     }
 
