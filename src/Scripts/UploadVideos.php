@@ -1,20 +1,16 @@
 <?php
 
 namespace StreamingAutomations\Scripts;
-require './custom-autoload.php';
+require_once '..\custom-autoload.php';
 
 use StreamingAutomations\Base\BaseScript;
+use StreamingAutomations\Modules\LuluStream as LuluStreamModule;
 
 class UploadVideos extends BaseScript
 {
     public const TYPE_LULU = 'lulustream';
 
     public const TYPE_DOOD = 'doodstream';
-
-    public function __construct()
-    {
-
-    }
 
     public function handle(): int
     {
@@ -32,6 +28,10 @@ class UploadVideos extends BaseScript
         $this->success("Checking file videos.csv for uploading...");
 
         $this->success("Found total " . count($total) . 'videos for processing...');
+
+        $luluStream = new LuluStreamModule();
+
+        dd($luluStream->getAccountInformation());
 
         $this->setIteration(count($total));
         foreach ($total as $video) {
