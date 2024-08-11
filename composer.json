@@ -1,7 +1,8 @@
 {
     "require": {
         "league/csv": "^9.7.0",
-        "illuminate/support": "^8.11"
+        "illuminate/support": "^8.11",
+        "symfony/var-dumper": "^7.1"
     },
     "autoload": {
         "psr-0": {"StreamingAutomations": "src/"},
