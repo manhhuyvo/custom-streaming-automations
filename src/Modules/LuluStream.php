@@ -10,6 +10,20 @@ use StreamingAutomations\Modules\ModuleResponse;
 
 class LuluStream
 {
+    public const UPLOAD_TYPE_MP4 = '.mp4';
+    public const UPLOAD_TYPE_WMV = '.wmv';
+    public const UPLOAD_TYPE_AVI = '.avi';
+    public const UPLOAD_TYPE_MOV = '.mov';
+    public const UPLOAD_TYPE_MKV = '.mkv';
+
+    public const AVAILABLE_UPLOAD_TYPES = [
+        self::UPLOAD_TYPE_MP4,
+        self::UPLOAD_TYPE_WMV,
+        self::UPLOAD_TYPE_AVI,
+        self::UPLOAD_TYPE_MOV,
+        self::UPLOAD_TYPE_MKV,
+    ];
+
     private LuluStreamClient $client;
 
     public function __construct()
@@ -21,6 +35,33 @@ class LuluStream
     public function getUploadServer(): ModuleResponse
     {
         return $this->resolveResponse('uploadServer');
+    }
+
+    public function uploadFileToServer(string $uploadServer, array $data): ModuleResponse
+    {
+        try {
+            /** @var Response $response */
+            $response = $this->client->uploadFile($uploadServer, $data);
+            if ($response->getStatusCode() != 200) {
+                throw new Exception ('Some errors occurred.');
+            }
+
+            $responseContent = $response->getBody()->getContents();
+            $responseContent = json_decode($responseContent, true);
+
+            if ($responseContent['status'] != 200) {
+                $error = $responseContent['msg'] ?? 'Unexpected errors occurred.';
+
+                throw new Exception("Request has failed with error: {$error}");
+            }
+
+            return ModuleResponse::success()
+                ->message('Successfully retrieved account information.')
+                ->data($responseContent);
+        } catch (Exception $e) {
+            return ModuleResponse::error()
+                ->message($e->getMessage());
+        }
     }
 
     /** FILE REQUESTS */

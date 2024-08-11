@@ -4,6 +4,8 @@ namespace StreamingAutomations\Modules\Client;
 
 use GuzzleHttp\Client;
 use Exception;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Utils;
 
 class LuluStreamClient
 {    
@@ -30,6 +32,46 @@ class LuluStreamClient
     public function uploadServer()
     {
         return $this->get('upload/server');
+    }
+
+    public function uploadFile(string $uploadServer, array $data)
+    {
+        $data = collect($data)
+            ->only([
+                'file',
+                'file_title',
+                'file_descr',
+                'snapshot',
+                'fld_id',
+                'cat_id',
+                'tags',
+                'file_public',
+                'file_adult',
+                'html_redirect',
+            ])
+            ->put('key', $this->apiKey)
+            ->map(function ($value, $key) {
+                if ($key == 'file') {
+                    return [
+                        'name' => $key,
+                        'contents' => Utils::tryFopen($value, 'r'),
+                    ];
+                }
+
+                return [
+                    'name' => $key,
+                    'contents' => $value,
+                ];
+            })
+            ->all();
+
+        $client = $this->getClient($uploadServer);
+
+        return $client->request(self::METHOD_POST, '', [
+            'multipart' => $data,
+        ]);
+        
+        return $this->post($uploadServer, $data);
     }
 
     /**
@@ -111,5 +153,11 @@ class LuluStreamClient
             ->implode('&');
 
         return $this->getClient($this->baseUrl)->get("api/{$endpoint}?{$urlParams}");
+    }
+
+    private function post(string $url, array $data)
+    {
+
+        return $this->getClient($url)->post($url, $data);
     }
 }
