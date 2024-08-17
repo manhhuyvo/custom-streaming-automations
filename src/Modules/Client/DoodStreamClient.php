@@ -26,10 +26,63 @@ class DoodStreamClient
         }
     }
 
-    /**
-     * ACCOUNT REQUESTS
-     */
+    /** UPLOAD REQUESTS */
+    public function urluploadList()
+    {
+        return $this->get('urlupload/list');
+    }
 
+    public function uploadServer()
+    {
+        return $this->get('upload/server');
+    }
+
+    public function uploadFile(string $uploadServer, array $data)
+    {
+        $data = collect($data)
+            ->only([
+                'file',
+            ])
+            ->put('key', $this->apiKey)
+            ->map(function ($value, $key) {
+                if ($key == 'file') {
+                    return [
+                        'name' => $key,
+                        'contents' => Utils::tryFopen($value, 'r'),
+                    ];
+                }
+
+                return [
+                    'name' => $key,
+                    'contents' => $value,
+                ];
+            })
+            ->all();
+
+        $client = $this->getClient($uploadServer);
+
+        return $client->request(self::METHOD_POST, '', [
+            'multipart' => $data,
+        ]);
+    }
+
+    /** FILES REQUESTS */
+    public function fileList(array $options = [])
+    {
+        return $this->get('file/list', $options);
+    }
+
+    public function fileInfo(array $options = [])
+    {
+        return $this->Get('file/info', $options);
+    }
+
+    public function fileMove(array $options = [])
+    {
+        return $this->get('file/move', $options);
+    }
+
+    /** ACCOUNT REQUESTS */
     public function accountInfo()
     {
         return $this->get('account/info');

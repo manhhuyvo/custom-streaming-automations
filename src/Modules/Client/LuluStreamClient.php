@@ -70,8 +70,6 @@ class LuluStreamClient
         return $client->request(self::METHOD_POST, '', [
             'multipart' => $data,
         ]);
-        
-        return $this->post($uploadServer, $data);
     }
 
     /**

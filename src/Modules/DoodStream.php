@@ -31,6 +31,60 @@ class DoodStream
         $this->client = new DoodStreamClient();
     }
 
+    /** UPLOAD REQUESTS */
+    public function getUploadUrlsList(): ModuleResponse
+    {
+        return $this->resolveResponse('urluploadList');
+    }
+
+    public function getUploadServer(): ModuleResponse
+    {
+        return $this->resolveResponse('uploadServer');
+    }
+
+    public function uploadFileToServer(string $uploadServer, array $data): ModuleResponse
+    {
+        try {
+            /** @var Response $response */
+            $response = $this->client->uploadFile($uploadServer, $data);
+            if ($response->getStatusCode() != 200) {
+                throw new Exception ('Some errors occurred.');
+            }
+
+            $responseContent = $response->getBody()->getContents();
+            $responseContent = json_decode($responseContent, true);
+
+            if ($responseContent['status'] != 200) {
+                $error = $responseContent['msg'] ?? 'Unexpected errors occurred.';
+
+                throw new Exception("Request has failed with error: {$error}");
+            }
+
+            return ModuleResponse::success()
+                ->message('Successfully uploaded file to server.')
+                ->data($responseContent);
+        } catch (Exception $e) {
+            return ModuleResponse::error()
+                ->message($e->getMessage());
+        }
+    }
+
+    /** FILE REQUESTS */
+    public function getFilesList(array $options = []): ModuleResponse
+    {
+        return $this->resolveResponse('fileList', $options);
+    }
+
+    public function getFileInfo(array $options = []): ModuleResponse
+    {
+        return $this->resolveResponse('fileInfo', $options);
+    }
+
+    public function moveFileToFolder(array $options = []): ModuleResponse
+    {
+        return $this->resolveResponse('fileMove', $options);
+    }
+
     /**
     * ACCOUNT REQUESTS
     */

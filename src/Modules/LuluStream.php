@@ -56,7 +56,7 @@ class LuluStream
             }
 
             return ModuleResponse::success()
-                ->message('Successfully retrieved account information.')
+                ->message('Successfully uploaded file to server.')
                 ->data($responseContent);
         } catch (Exception $e) {
             return ModuleResponse::error()

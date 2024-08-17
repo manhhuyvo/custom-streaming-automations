@@ -20,8 +20,6 @@ class UploadVideos extends BaseScript
     public function handle(): int
     {
         $this->success("Checking available videos for uploading today...");
-
-        $doodstream = new DoodStream();
         
         try {
             $files = $this->prepareFile();
