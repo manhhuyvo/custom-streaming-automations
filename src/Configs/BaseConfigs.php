@@ -4,12 +4,14 @@ namespace StreamingAutomations\Configs;
 
 use Illuminate\Support\Arr;
 use StreamingAutomations\Configs\LuluStream;
+use StreamingAutomations\Configs\DoodStream;
 use StreamingAutomations\Configs\ConfigInterface;
 
 class BaseConfigs
 {
     public const CONFIGS = [
         LuluStream::class,
+        DoodStream::class,
     ];
 
     private array $data = [];

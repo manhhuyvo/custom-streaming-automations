@@ -9,6 +9,7 @@ use StreamingAutomations\Modules\LuluStream as LuluStreamModule;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use League\Csv\Writer;
+use StreamingAutomations\Modules\DoodStream;
 
 class UploadVideos extends BaseScript
 {
@@ -20,6 +21,9 @@ class UploadVideos extends BaseScript
     {
         $this->success("Checking available videos for uploading today...");
 
+        $doodstream = new DoodStream();
+        dd($doodstream->getAccountInfo());
+        
         try {
             $files = $this->prepareFile();
         } catch (Exception $e) {
