@@ -18,7 +18,7 @@ class MultipleUploadVideos extends BaseScript
     public const TYPE_DOOD = 'doodstream';
     
     public const AVAILABLE_STREAMS = [
-        //SELF::TYPE_LULU,
+        SELF::TYPE_LULU,
         SELF::TYPE_DOOD,
     ];
 
@@ -138,6 +138,8 @@ class MultipleUploadVideos extends BaseScript
 
     private function handleDoodStream(array $files): array
     {
+        $success = 0;
+        $failed = 0;
         $this->warning('STARTING UPLOAD PROCESS FOR DOODSTREAM...');
         $doodStream = new DoodStream();
 
@@ -148,8 +150,9 @@ class MultipleUploadVideos extends BaseScript
 
         if (!$newFolderResponse->isSuccesful()) {
             $this->error("[DOODSTREAM] Failed to create folder for today. Error: {$newFolderResponse->getMessage()}...");
+            $failed++;
 
-            return 0;
+            return [$success, $failed];
         }
 
         $newFolderId = $newFolderResponse->getData('result.fld_id');
@@ -159,8 +162,9 @@ class MultipleUploadVideos extends BaseScript
 
         if (!$uploadServerResponse->isSuccesful()) {
             $this->error("[DOODSTREAM] Failed to get upload server for today. Error: {$uploadServerResponse->getMessage()}...");
+            $failed++;
 
-            return 0;
+            return [$success, $failed];
         }
 
         $uploadServer = $uploadServerResponse->getData('result');
@@ -186,8 +190,6 @@ class MultipleUploadVideos extends BaseScript
         ];
         $afterUploads = [];
 
-        $success = 0;
-        $failed = 0;
         foreach ($videoData as $video) {
             $this->increaseIteration();
 
@@ -262,6 +264,9 @@ class MultipleUploadVideos extends BaseScript
     
     private function handleLuluStream(array $files): array
     {
+        $success = 0;
+        $failed = 0;
+        $this->warning('STARTING UPLOAD PROCESS FOR LULUSTREAM...');
         $luluStream = new LuluStreamModule();
 
         //Create a new folder for today
@@ -272,8 +277,9 @@ class MultipleUploadVideos extends BaseScript
 
         if (!$newFolderResponse->isSuccesful()) {
             $this->error("[LULUSTREAM] Failed to create folder for today. Error: {$newFolderResponse->getMessage()}...");
+            $failed++;
 
-            return 0;
+            return [$success, $failed];
         }
 
         $newFolderId = $newFolderResponse->getData('result.fld_id');
@@ -283,8 +289,9 @@ class MultipleUploadVideos extends BaseScript
 
         if (!$uploadServerResponse->isSuccesful()) {
             $this->error("[LULUSTREAM] Failed to get upload server for today. Error: {$uploadServerResponse->getMessage()}...");
+            $failed++;
 
-            return 0;
+            return [$success, $failed];
         }
 
         $uploadServer = $uploadServerResponse->getData('result');
@@ -311,8 +318,6 @@ class MultipleUploadVideos extends BaseScript
         ];
         $afterUploads = [];
 
-        $success = 0;
-        $failed = 0;
         foreach ($videoData as $video) {
             $this->increaseIteration();
 
