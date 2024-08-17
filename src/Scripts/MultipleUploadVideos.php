@@ -143,7 +143,7 @@ class MultipleUploadVideos extends BaseScript
 
         // Create a new folder for today
         $newFolderResponse = $doodStream->createFolder([
-            'name' => Carbon::now()->format('dmY His'),
+            'name' => Carbon::now()->format('Y m d H:i:s'),
         ]);
 
         if (!$newFolderResponse->isSuccesful()) {
@@ -213,7 +213,7 @@ class MultipleUploadVideos extends BaseScript
 
             $afterUploadData = array_merge($afterUploadData, [
                 'uploaded' => 1,
-                'filecode' => $response->getData('files.0.filecode'),
+                'filecode' => $response->getData('result.0.filecode'),
             ]);
             $success++;
 
@@ -222,19 +222,21 @@ class MultipleUploadVideos extends BaseScript
             // Move file to folder
             $moveFileResponse = $doodStream->moveFileToFolder([
                 'fld_id' => $newFolderId,
-                'file_code' => $response->getData('files.0.filecode'),
+                'file_code' => $response->getData('result.0.filecode'),
             ]);
 
             if (!$moveFileResponse->isSuccesful()) {
                 $this->iteration("[DOODSTREAM] Failed to move video {$prefix} to today folder with error: {$moveFileResponse->getMessage()}...", self::TYPE_WARNING);
             } else {
-                $this->iteration("[DOODSTREAM] Successfully moved video {$prefix} to today folder...");
+                $this->iteration("[DOODSTREAM] Successfully moved video {$prefix} to today folder...", self::TYPE_SUCCESS);
             }
+
+            $this->line();
         }
 
         $this->iteration("[LULUSTREAM] Generating CSV file for today upload...", self::TYPE_WARNING);
 
-        $today = Carbon::today()->format('dmY');
+        $today = Carbon::today()->format('dmY-His');
         $todayFolderName = dirname(dirname(__DIR__)) . "\assets\\{$today}";
 
         try {
@@ -264,7 +266,7 @@ class MultipleUploadVideos extends BaseScript
 
         //Create a new folder for today
         $newFolderResponse = $luluStream->createFolder([
-            'name' => Carbon::now()->format('dmY His'),
+            'name' => Carbon::now()->format('Y m d H:i:s'),
             'descr' => "This folder contains videos uploaded starting at: " . Carbon::now()->format('d/m/Y H:i:s'),
         ]);
 
@@ -345,7 +347,7 @@ class MultipleUploadVideos extends BaseScript
 
         $this->iteration("[LULUSTREAM] Generating CSV file for today upload...", self::TYPE_WARNING);
 
-        $today = Carbon::today()->format('dmY');
+        $today = Carbon::today()->format('dmY-His');
         $todayFolderName = dirname(dirname(__DIR__)) . "\assets\\{$today}";
 
         try {

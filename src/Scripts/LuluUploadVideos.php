@@ -9,9 +9,8 @@ use StreamingAutomations\Modules\LuluStream as LuluStreamModule;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use League\Csv\Writer;
-use StreamingAutomations\Modules\DoodStream;
 
-class UploadVideos extends BaseScript
+class LuluUploadVideos extends BaseScript
 {
     public const TYPE_LULU = 'lulustream';
 
@@ -58,7 +57,7 @@ class UploadVideos extends BaseScript
 
         //Create a new folder for today
         $newFolderResponse = $luluStream->createFolder([
-            'name' => Carbon::now()->format('dmY His'),
+            'name' => Carbon::now()->format('Y m d H:i:s'),
             'descr' => "This folder contains videos uploaded starting at: " . Carbon::now()->format('d/m/Y H:i:s'),
         ]);
 
@@ -139,11 +138,11 @@ class UploadVideos extends BaseScript
 
         $this->iteration("Generating CSV file for today upload...", self::TYPE_WARNING);
 
-        $today = Carbon::today()->format('dmY');
+        $today = Carbon::today()->format('dmY-His');
         $todayFolderName = dirname(dirname(__DIR__)) . "\assets\\{$today}";
 
         try {
-            $csv = Writer::createFromPath("{$todayFolderName}\summary-{$today}.csv", 'w+');
+            $csv = Writer::createFromPath("{$todayFolderName}\summary-lulu-{$today}.csv", 'w+');
             $csv->insertOne($csvHeaders);
     
             foreach ($afterUploads as $uploaded) {
@@ -155,9 +154,8 @@ class UploadVideos extends BaseScript
                 ]);
             }
     
-            $csv->output("{$todayFolderName}\summary-{$today}.csv");
+            $csv->output("{$todayFolderName}\summary-lulu-{$today}.csv");
         } catch (Exception $e) {
-
         }
 
         $this->success('[SCRIPT ACTION RESULTS]');
@@ -218,6 +216,6 @@ class UploadVideos extends BaseScript
     }
 }
 
-$script = new UploadVideos($argv);
+$script = new LuluUploadVideos($argv);
 
 return $script->handle();

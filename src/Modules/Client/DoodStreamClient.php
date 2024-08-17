@@ -43,7 +43,7 @@ class DoodStreamClient
             ->only([
                 'file',
             ])
-            ->put('key', $this->apiKey)
+            ->put('api_key', $this->apiKey)
             ->map(function ($value, $key) {
                 if ($key == 'file') {
                     return [
