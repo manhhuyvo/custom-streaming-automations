@@ -13,7 +13,9 @@
         "psr-4": {
             "StreamingAutomations\\": "src/",
             "StreamingAutomations\\Base\\": "src/Base/",
-            "\\": ""
+            "StreamingAutomations\\Configs\\": "src/Configs/",
+            "StreamingAutomations\\Modules\\": "src/Modules/",
+            "StreamingAutomations\\Scripts\\": "src/Scripts/"
         },
         "files": ["vendor/autoload.php", "src/helpers.php"]
     }

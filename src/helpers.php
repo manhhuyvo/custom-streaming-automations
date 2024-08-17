@@ -1,8 +1,7 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 use StreamingAutomations\Configs\BaseConfigs;
-use Symfony\Component\Dotenv\Dotenv;
 
 if (! function_exists('config')) {
     function config(string $key = '', $default = null)
@@ -10,5 +9,18 @@ if (! function_exists('config')) {
         $configs = new BaseConfigs();
 
         return $configs->get($key, $default);
+    }
+}
+
+if (! function_exists('isFolderExisted')) {
+    function isFolderExisted(string $path = '')
+    {
+        $path = realpath($path);
+
+        if (!$path || !is_dir($path)) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -4,6 +4,7 @@ namespace StreamingAutomations\Base;
 
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use StreamingAutomations\Bootstrap;
 
 class BaseScript
 {
@@ -20,6 +21,8 @@ class BaseScript
     private int $currentIndex = 0;
 
     public function __construct($argv) {
+        Bootstrap::instantiate();
+
         $validArguments = collect($argv)
             ->filter(function ($arg) {
                 return Str::startsWith($arg, '--');

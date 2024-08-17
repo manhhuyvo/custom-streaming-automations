@@ -1,7 +1,7 @@
 <?php
-
 namespace StreamingAutomations\Scripts;
-require_once '..\custom-autoload.php';
+
+require_once 'vendor/autoload.php';
 
 use Exception;
 use StreamingAutomations\Base\BaseScript;
@@ -18,14 +18,37 @@ class UploadVideos extends BaseScript
 
     public function handle(): int
     {
-        $this->success("Checking file videos.csv for uploading...");
+        $this->success("Checking available videos for uploading today...");
 
-        $files = $this->prepareFile();  
+        try {
+            $files = $this->prepareFile();
+        } catch (Exception $e) {
+            $this->error("Failed to execute script with error: {$e->getMessage()}");
 
-        $this->success("Found total " . count($files) . 'videos for processing...');
+            return 0;
+        }
+
+        $this->success("Found total " . count($files) . ' videos for processing...');
         
         if (count($files) == 0) {
             $this->success('No videos were added today. No need to proceed...');
+
+            return 1;
+        }
+
+        $this->setIteration(count($files));
+
+        if ($this->isDry()) {
+            $this->success('The following files will be processed...');
+
+            foreach ($files as $file) {
+                $this->increaseIteration();
+
+                $this->iteration("File Location: {$file['location']}", self::TYPE_WARNING);
+                $this->iteration("File Thumbnail: {$file['thumbnail']}", self::TYPE_WARNING);
+                $this->iteration("File Index (Folder Name): {$file['index']}", self::TYPE_WARNING);
+                $this->line();
+            }
 
             return 1;
         }
@@ -111,7 +134,6 @@ class UploadVideos extends BaseScript
             $success++;
 
             $this->iteration("Successfully uploaded video {$prefix}...", self::TYPE_SUCCESS);
-            $this->line();
         }
 
         $this->iteration("Generating CSV file for today upload...", self::TYPE_WARNING);
@@ -137,7 +159,6 @@ class UploadVideos extends BaseScript
 
         }
 
-        $this->line();
         $this->success('[SCRIPT ACTION RESULTS]');
         $this->success("[SUCCESS] {$success} RECORD(S)");
         $this->success("[FAILED] {$failed} RECORD(S)");
@@ -152,6 +173,9 @@ class UploadVideos extends BaseScript
         $dirName = dirname(dirname(__DIR__));
 
         $todayFolderName = $dirName . "\assets\\{$today}";
+        if (! isFolderExisted($todayFolderName)) {
+            throw new Exception("Folder name '{$today}' for today does not exist.");
+        }
 
         $todayFolders = collect(scandir($todayFolderName))
             ->filter(function ($folderName) {
