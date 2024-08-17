@@ -40,6 +40,22 @@ class DoodStreamClient
         return $this->get('account/stats');
     }
 
+    /** FOLDER REQUESTS */
+    public function folderList(array $options = [])
+    {
+        return $this->get('folder/list', $options);
+    }
+
+    public function folderCreate(array $options = [])
+    {
+        return $this->get('folder/create', $options);
+    }
+
+    public function folderRename(array $options = [])
+    {
+        return $this->get('folder/rename', $options);
+    }
+
     private function getClient(string $baseUri, array $options = []): Client
     {
         if (! empty($options)) {

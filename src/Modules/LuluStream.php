@@ -116,7 +116,7 @@ class LuluStream
             }
 
             return ModuleResponse::success()
-                ->message('Successfully retrieved account information.')
+                ->message('Successfully processed request endpoint.')
                 ->data($responseContent);
         } catch (Exception $e) {
             return ModuleResponse::error()

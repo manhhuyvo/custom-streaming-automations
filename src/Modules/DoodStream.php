@@ -34,10 +34,25 @@ class DoodStream
     /**
     * ACCOUNT REQUESTS
     */
-
     public function getAccountInfo()
     {
-    return $this->resolveResponse('accountInfo');
+        return $this->resolveResponse('accountInfo');
+    }
+
+    /** FOLDER REQUESTS */
+    public function getFoldersList(array $options = []): ModuleResponse
+    {
+        return $this->resolveResponse('folderList', $options);
+    }
+
+    public function createFolder(array $options = []): ModuleResponse
+    {
+        return $this->resolveResponse('folderCreate', $options);
+    }
+
+    public function renameFolder(array $options = []): ModuleResponse
+    {
+        return $this->resolveResponse('folderRename', $options);
     }
 
     private function resolveResponse(string $function, array $options = []): ModuleResponse
@@ -59,7 +74,7 @@ class DoodStream
             }
 
             return ModuleResponse::success()
-                ->message('Successfully retrieved account information.')
+                ->message('Successfully processed request endpoint.')
                 ->data($responseContent);
         } catch (Exception $e) {
             return ModuleResponse::error()

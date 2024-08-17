@@ -22,7 +22,6 @@ class UploadVideos extends BaseScript
         $this->success("Checking available videos for uploading today...");
 
         $doodstream = new DoodStream();
-        dd($doodstream->getAccountInfo());
         
         try {
             $files = $this->prepareFile();
