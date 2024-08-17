@@ -1,10 +1,10 @@
 <?php
 
 namespace StreamingAutomations\Base;
-require 'src/custom-autoload.php';
 
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use StreamingAutomations\Bootstrap;
 
 class BaseScript
 {
@@ -21,12 +21,14 @@ class BaseScript
     private int $currentIndex = 0;
 
     public function __construct($argv) {
+        Bootstrap::instantiate();
+
         $validArguments = collect($argv)
             ->filter(function ($arg) {
                 return Str::startsWith($arg, '--');
             })
             ->toArray();
-            
+
         $this->setIsDry(in_array(self::DRY_MODE, $validArguments));
     }
 
@@ -63,6 +65,11 @@ class BaseScript
 
                 return;
         }
+    }
+
+    public function line(): void
+    {
+        $this->output("\n");
     }
 
     public function success(string $value = ''): void

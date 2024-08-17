@@ -140,7 +140,6 @@ class MultipleUploadVideos extends BaseScript
     {
         $success = 0;
         $failed = 0;
-
         $this->warning('STARTING UPLOAD PROCESS FOR DOODSTREAM...');
         $doodStream = new DoodStream();
 
@@ -267,6 +266,7 @@ class MultipleUploadVideos extends BaseScript
     {
         $success = 0;
         $failed = 0;
+        $this->warning('STARTING UPLOAD PROCESS FOR LULUSTREAM...');
         $luluStream = new LuluStreamModule();
 
         //Create a new folder for today
