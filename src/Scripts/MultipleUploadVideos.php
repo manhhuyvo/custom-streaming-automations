@@ -101,6 +101,7 @@ class MultipleUploadVideos extends BaseScript
             ->filter(function ($folderName) {
                 return !empty($folderName) && !Str::contains($folderName, ['.']);
             })
+            ->sort()
             ->toArray();
 
         $files = [];
