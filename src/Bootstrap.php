@@ -8,7 +8,9 @@ use Symfony\Component\Dotenv\Dotenv;
 class Bootstrap
 {
     public static function instantiate()
-    {        
+    {
+        error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
         // Unbelievable that we have to load this one manually
         $dotenv = new Dotenv();
         $dotenv->loadEnv('.env');
