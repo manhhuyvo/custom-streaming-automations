@@ -5,6 +5,7 @@ namespace StreamingAutomations\Base;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use StreamingAutomations\Bootstrap;
+use Exception;
 
 class BaseScript
 {
@@ -21,7 +22,15 @@ class BaseScript
     private int $currentIndex = 0;
 
     public function __construct($argv) {
-        Bootstrap::instantiate();
+
+        try {
+            Bootstrap::instantiate();
+        } catch (Exception $e) {
+            $this->error("Failed to instantiate the application: {$e->getMessage()}...");
+            $this->error("End the process.");
+
+            exit;
+        }
 
         $validArguments = collect($argv)
             ->filter(function ($arg) {
